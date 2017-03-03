@@ -34,7 +34,7 @@ namespace API_test
         //Gets the closest player from any team to the puck
         {
             Player closestPlayer = null;
-            float playerDistance = 999;
+            float playerDistance = 999f;
 
             foreach (Player p in PlayerManager.Players)
             {
@@ -52,7 +52,7 @@ namespace API_test
         //Gets the closest player from the opposite team
         {
             Player closestPlayer = null;
-            float playerDistance = 999;
+            float playerDistance = 999f;
 
             foreach (Player p in PlayerManager.Players)
             {
@@ -67,14 +67,14 @@ namespace API_test
         }
 
         public static Player ClosestTeammate(HQMVector v)
-        //Gets the closest player from the same team
+        //Gets the closest player from the same team, excluding self
         {
             Player closestPlayer = null;
-            float playerDistance = 999;
+            float playerDistance = 999f;
 
             foreach (Player p in PlayerManager.Players)
             {
-                if ((Calc.DistanceSquared(p.Position, v) < playerDistance)&&(p.Team==PlayerManager.LocalPlayer.Team))
+                if ((Calc.DistanceSquared(p.Position, v) < playerDistance) && (p.Team == PlayerManager.LocalPlayer.Team) && (p.Name != PlayerManager.LocalPlayer.Name))
                 {
                     playerDistance = Calc.DistanceSquared(p.Position, v);
                     closestPlayer = p;
@@ -84,7 +84,47 @@ namespace API_test
             return closestPlayer;
         }
 
+        public static Player LeadingScorer()
+        //Gets the player with the most goals
+        {
+            Player leader = null;
+            int goals = 0;
+            int assists = 0;
 
+            foreach (Player p in PlayerManager.Players)
+            {
+                if (p.Goals>goals)
+                {
+                    goals = p.Goals;
+                    assists = p.Assists;
+                    leader = p;
+                }
+                else if  (p.Goals == goals)
+                {
+                    if (p.Assists>assists)
+                    {
+                        assists = p.Assists;
+                        leader = p;
+                    }
+                }
+                
+            }
+
+            return leader;
+        }
+
+        public static HQMVector Extrapolate(HQMVector cPos, HQMVector angle, float speed, float drag, float time)
+        //Calculates position if object continues on same path. 
+        //Does not attempt to account for vertical arc, so should only be used for players and sliding puck. 
+        // NOT FUCTIONAL YET
+        {
+            float gravity = 9.8f;
+            HQMVector endPoint = new HQMVector(0,0,0);
+
+            return endPoint;
+
+
+        }
 
     }
 }
